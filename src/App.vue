@@ -1,23 +1,61 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <router-view/>
+      <home-header v-bind:seller='seller'></home-header>
+      <div class="tab border-1px">
+          <router-link class="tab-item" to="/goods">商品</router-link>
+          <router-link class="tab-item" to="/ratings">评论</router-link>
+          <router-link class="tab-item" to="/seller">商家</router-link>
+      </div>
+      <router-view></router-view>
   </div>
 </template>
 
 <script>
+import  HomeHeader from './components/header/header'
+import axios from 'axios'
 export default {
-  name: 'App'
+  name: 'App',
+  components:{
+    HomeHeader
+  },
+  data(){
+    return {
+      seller:{},
+      ratings:{},
+      goods:{}
+    }
+  },
+  mounted() {
+    this.getAllData();
+  },
+  methods: {
+    getAllData(){
+      axios.get('/api/data.json')
+        .then(this.getAllDataSucc)
+    },
+    getAllDataSucc(res){
+      const data = res.data;
+      this.seller = data.seller;
+      this.ratings = data.ratings;
+      this.goods = data.goods;
+    }
+  }
 }
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style lang="stylus" scoped>
+@import 'common/stylus/mixin.styl'
+  #app
+    .tab
+      display :flex;
+      height :40px;
+      border-1px(rgba(7, 17, 27, 0.1))
+      .tab-item
+        flex :1;
+        line-height :40px;
+        text-align :center;
+        color :rgb(77,85,93)
+        font-size :14px;
+        &.acitve
+          color :rgb(240,20,20)
 </style>
