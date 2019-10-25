@@ -15,18 +15,28 @@
                     <span class="text">{{seller.supports[0].description}}</span>
                 </div>
             </div>
-            <div class="count-group" v-if="seller.supports">
+            <div class="count-group" v-if="seller.supports" v-on:click="detailIsShow">
                 <span class="count">{{seller.supports.length}}个</span>
                 <span class="icon-keyboard_arrow_right"></span>
             </div>
         </div>
-        <div class="bullet-wrap">
+        <div class="bullet-wrap" v-on:click="detailIsShow">
             <span class="notice"></span>
             <span class="notice-info">{{seller.bulletin}}</span>
             <span class="icon-keyboard_arrow_right"></span>
         </div>
         <div class="background">
             <img :src="seller.avatar" width="100%" height="100%">
+        </div>
+        <div class="detail" v-show="detailShow">
+            <div class="detailwrap clearfix">
+                <div class="main">
+                    <h1 class="main-name">{{seller.name}}</h1>
+                </div>
+            </div>
+            <div class="detailfooter" v-on:click='detailIsClose'>
+                <i class="icon-close"></i>
+            </div>
         </div>
     </div>
 </template>
@@ -39,6 +49,19 @@
         },
         created() {
             this.classGroup = ['decrease','discount','special','invoice','guarantee']
+        },
+        data() {
+            return {
+                detailShow:false
+            }
+        },
+        methods: {
+            detailIsShow(){
+                this.detailShow = true;
+            },
+            detailIsClose(){
+                this.detailShow = false;
+            }
         },
     }
 </script>
@@ -145,4 +168,33 @@
             height 100%;
             z-index -1;
             filter blur(10px)
+        .detail
+            position fixed;
+            top 0;
+            left 0;
+            width 100%;
+            height 100%;
+            z-index 100
+            overflow auto
+            background-color rgba(7,17,27,0.8)
+            .detailwrap
+                min-height 100%;
+                width 100%
+                .main
+                    width 100%
+                    margin-top 64px;
+                    padding-bottom 64px;
+                    text-align center
+                    .main-name
+                        line-height 16px;
+                        font-size 16px;
+                        font-weight 350       
+            .detailfooter
+                position relative
+                width 32px;
+                height 32px;
+                margin -64px auto 0 auto
+                font-size 32px;
+                clear both;
+
 </style>
