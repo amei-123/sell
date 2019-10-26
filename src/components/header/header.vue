@@ -1,6 +1,7 @@
 <template>
     <div id="seller">
-        <div class="content-wrap">
+        <div>
+            <div class="content-wrap">
             <div class="Img"><img class="avatar" :src='seller.avatar'></div>
             <div class="content">
                 <div class="title">
@@ -19,19 +20,44 @@
                 <span class="count">{{seller.supports.length}}个</span>
                 <span class="icon-keyboard_arrow_right"></span>
             </div>
+            </div>
+            <div class="bullet-wrap" v-on:click="detailIsShow">
+                <span class="notice"></span>
+                <span class="notice-info">{{seller.bulletin}}</span>
+                <span class="icon-keyboard_arrow_right"></span>
+            </div>
+            <div class="background">
+                <img :src="seller.avatar" width="100%" height="100%">
+            </div>
         </div>
-        <div class="bullet-wrap" v-on:click="detailIsShow">
-            <span class="notice"></span>
-            <span class="notice-info">{{seller.bulletin}}</span>
-            <span class="icon-keyboard_arrow_right"></span>
-        </div>
-        <div class="background">
-            <img :src="seller.avatar" width="100%" height="100%">
-        </div>
-        <div class="detail" v-show="detailShow">
+        <div class="detail" v-show="detailShow"> 
             <div class="detailwrap clearfix">
                 <div class="main">
                     <h1 class="main-name">{{seller.name}}</h1>
+                    <div class="starWarp">
+                        <star :size='48' :score='seller.score'></star>
+                    </div>
+                    <div class="title">
+                        <div class="line"></div>
+                        <div class="detail-title">优惠信息</div>
+                        <div class="line"></div>
+                    </div>
+                    <ul v-if="seller.supports" class="support">
+                        <li 
+                            v-for="(item,index) in seller.supports" 
+                            class="support-item"
+                            :key=index
+                        >
+                            <span class="icon" :class="classGroup[index]"></span>
+                            <span class=text>{{seller.supports[index].description}}</span>
+                        </li>
+                    </ul>
+                    <div class="title">
+                        <div class="line"></div>
+                        <div class="detail-title">商家公告</div>
+                        <div class="line"></div>
+                    </div>
+                    <div class="notice-detail"><span>{{seller.bulletin}}</span></div>
                 </div>
             </div>
             <div class="detailfooter" v-on:click='detailIsClose'>
@@ -42,10 +68,14 @@
 </template>
 
 <script type="text/ecmascript-6">
+import star from '../star/star.vue'
     export default {
         name:'Seller',
         props:{
             seller:Object
+        },
+        components:{
+            star
         },
         created() {
             this.classGroup = ['decrease','discount','special','invoice','guarantee']
@@ -176,7 +206,8 @@
             height 100%;
             z-index 100
             overflow auto
-            background-color rgba(7,17,27,0.8)
+            transition all 0.5s;
+            background-color: rgba(7,17,27,0.8)
             .detailwrap
                 min-height 100%;
                 width 100%
@@ -186,9 +217,61 @@
                     padding-bottom 64px;
                     text-align center
                     .main-name
+                        margin-bottom 16px;
                         line-height 16px;
                         font-size 16px;
-                        font-weight 350       
+                        font-weight 350    
+                    .title
+                        display flex;
+                        margin 28px auto 24px auto;
+                        width 80%;
+                        .line
+                            position relative;
+                            top -6px;   
+                            flex 1;
+                            border-bottom 1px solid rgba(255,255,255,.2);
+                        .detail-title
+                            margin 0 12px;
+                            font-size 14px;
+                            font-weight 700;
+                    .support
+                        width 80%;
+                        margin auto;
+                        .support-item
+                            margin-top 12px;
+                            text-align left
+                        .icon
+                            display inline-block;
+                            width 16px;
+                            height 16px;
+                            margin-left 12px;
+                            margin-right 6px;
+                            background-size 16px 16px;
+                            vertical-align bottom
+                            &.decrease
+                                bg-image('decrease_2');
+                            &.discount
+                                bg-image('discount_2');
+                            &.guarantee
+                                bg-image('guarantee_2');
+                            &.invoice
+                                bg-image('invoice_2');
+                            &.special
+                                bg-image('special_2');
+                        .text
+                            font-size 12px;
+                            line-height 12px;
+                            vertical-align bottom
+                    .notice-detail
+                        width 80%;
+                        margin auto;
+                        font-size:12px;
+                        span
+                            display inline-block;
+                            margin-left 12px;
+                            margin-right 12px;
+                            line-height 24px;
+                            text-align left;
             .detailfooter
                 position relative
                 width 32px;
