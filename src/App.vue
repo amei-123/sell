@@ -30,14 +30,12 @@ export default {
   },
   methods: {
     getAllData(){
-      axios.get('/api/data.json')
+      axios.get('/api/seller.json')
         .then(this.getAllDataSucc)
     },
     getAllDataSucc(res){
       const data = res.data;
       this.seller = data.seller;
-      this.ratings = data.ratings;
-      this.goods = data.goods;
     }
   }
 }

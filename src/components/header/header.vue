@@ -48,6 +48,7 @@
                             class="support-item"
                             :key=index
                         >
+                            <!-- <activity :size='2' :index='index'></activity> -->
                             <span class="icon" :class="classGroup[index]"></span>
                             <span class=text>{{seller.supports[index].description}}</span>
                         </li>
@@ -69,13 +70,15 @@
 
 <script type="text/ecmascript-6">
 import star from '../star/star.vue'
+import activity from '../activity/activity.vue'
     export default {
         name:'Seller',
         props:{
             seller:Object
         },
         components:{
-            star
+            star,
+            activity
         },
         created() {
             this.classGroup = ['decrease','discount','special','invoice','guarantee']
