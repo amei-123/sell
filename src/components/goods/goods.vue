@@ -38,6 +38,9 @@
           </li>
         </ul>
       </div>
+      <shop-cart v-bind:deliveryPrice="seller.deliveryPrice"
+        v-bind:minPrice="seller.minPrice"
+      ></shop-cart>
   </div>
 </template>
 
@@ -45,7 +48,11 @@
 import axios from "axios";
 import Bscroll from "better-scroll";
 import "../../common/stylus/mixin.styl";
+import ShopCart from "../shopcart/shopcart"
 export default {
+  props:{
+    seller:Object
+  },
   name: "Goods",
   data() {
     return {
@@ -56,102 +63,64 @@ export default {
     };
   },
   created() {
-        console.group('------created创建完毕状态------');
-        console.log("%c%s", "color:red", "el     : " + this.$el); //undefined
-        console.log("%c%s", "color:red", "data   : " + this.$data); //已被初始化 
-        console.log("%c%s", "color:red", "message: " + this.goods); //已被初始化
-        console.log(`created阶段12`)
         this.getAllData();
-    },
-    beforeMount() {
-        console.group('------beforeMount挂载前状态------');
-        console.log("%c%s", "color:red", "el     : " + (this.$el)); //已被初始化
-        console.log(this.$el);
-        console.log("%c%s", "color:red", "data   : " + this.$data); //已被初始化  
-        console.log("%c%s", "color:red", "message: " + this.goods); //已被初始化
-        console.log(`beforeMount阶段13`)
-    },
-    mounted() {
-        console.group('------mounted 挂载结束状态------');
-        console.log("%c%s", "color:red", "el     : " + this.$el); //已被初始化
-        console.log(this.$el);
-        console.log("%c%s", "color:red", "data   : " + this.$data); //已被初始化
-        console.log("%c%s", "color:red", "message: " + this.goods); //已被初始化
-        console.log(`mounted阶段14`)
-        console.log(1111,this.goods)
-        console.log(document.getElementsByClassName('good-lists-hook'))
-    },
-    computed:{
-        currentIndex(){
-            for(let i=0;i<this.heightList.length;i++){
-                let height1 = this.heightList[i];
-                let height2 = this.heightList[i+1];
-                if (!height2 || (this.ScrollY>=height1&&this.ScrollY<height2)) {
-                    console.log(i);
-                    return i;
-                }
+  },
+  computed:{
+    currentIndex(){
+        for(let i=0;i<this.heightList.length;i++){
+            let height1 = this.heightList[i];
+            let height2 = this.heightList[i+1];
+            if (!height2 || (this.ScrollY>=height1&&this.ScrollY<height2)) {
+                return i;
             }
-            return 0;
         }
-    },
-    beforeUpdate() {
-        console.group('beforeUpdate 更新前状态===============》');
-        console.log("%c%s", "color:red", "el     : " + this.$el);
-        console.log(this.$el);
-        console.log("%c%s", "color:red", "data   : " + this.$data);
-        console.log("%c%s", "color:red", "message: " + this.goods);
-        console.log(`beforeUpdate阶段15`)
-    },
-    updated() {
-        console.group('updated 更新完成状态===============》');
-        console.log("%c%s", "color:red", "el     : " + this.$el);
-        console.log(this.$el);
-        console.log("%c%s", "color:red", "data   : " + this.$data);
-        console.log("%c%s", "color:red", "message: " + this.goods);
-        console.log(`updated阶段16`)
-        console.log(1111,this.goods)
-    },
-    methods: {
-        handleSroll(){
-            this.menuScroll = new Bscroll(this.$refs.menuWrapper, {
-                mouseWheel: true,
-                click:true
-            });
-            this.goodScroll = new Bscroll(this.$refs.goodsWarpper, {
-                mouseWheel: true,
-                probeType: 3  //时刻监控位置的变化
-            });
-            this.goodScroll.on('scroll',(pos)=>{
-                this.ScrollY = Math.abs( Math.round(pos.y))
-            })
-        },
-        getAllData() {
-            axios.get("/api/goods.json").then(this.getAllDataSucc);
-        },
-        getAllDataSucc(res) {
-            const data = res.data;
-            this.goods = data.goods;
-            this.$nextTick(()=>{
-                this.handleSroll();
-                this.calculateHeight();
-            })
-        },
-        calculateHeight(){
-            let goodList = document.getElementsByClassName('good-lists-hook');
-            let height = 0;
-            this.heightList.push(height);
-            for(let i=0;i<goodList.length;i++){
-                let item = goodList[i];
-                height+=item.clientHeight;
-                this.heightList.push(height);
-            }
-        },
-        handleMenuClick(index){
-            let foodList = document.getElementsByClassName('good-lists-hook');
-            let el = foodList[index];
-            this.goodScroll.scrollToElement(el,300)
-        }
+        return 0;
     }
+  },
+  methods: {
+      handleSroll(){
+          this.menuScroll = new Bscroll(this.$refs.menuWrapper, {
+              mouseWheel: true,
+              click:true
+          });
+          this.goodScroll = new Bscroll(this.$refs.goodsWarpper, {
+              mouseWheel: true,
+              probeType: 3  //时刻监控位置的变化
+          });
+          this.goodScroll.on('scroll',(pos)=>{
+              this.ScrollY = Math.abs( Math.round(pos.y))
+          })
+      },
+      getAllData() {
+          axios.get("/api/goods.json").then(this.getAllDataSucc);
+      },
+      getAllDataSucc(res) {
+          const data = res.data;
+          this.goods = data.goods;
+          this.$nextTick(()=>{
+              this.handleSroll();
+              this.calculateHeight();
+          })
+      },
+      calculateHeight(){
+          let goodList = document.getElementsByClassName('good-lists-hook');
+          let height = 0;
+          this.heightList.push(height);
+          for(let i=0;i<goodList.length;i++){
+              let item = goodList[i];
+              height+=item.clientHeight;
+              this.heightList.push(height);
+          }
+      },
+      handleMenuClick(index){
+          let foodList = document.getElementsByClassName('good-lists-hook');
+          let el = foodList[index];
+          this.goodScroll.scrollToElement(el,300)
+      }
+  },
+  components:{
+    ShopCart
+  }
 };
 </script>
 

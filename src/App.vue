@@ -6,7 +6,7 @@
           <router-link class="tab-item" to="/ratings">评论</router-link>
           <router-link class="tab-item" to="/seller">商家</router-link>
       </div>
-      <router-view></router-view>
+      <router-view :seller="seller"></router-view>
   </div>
 </template>
 
@@ -20,9 +20,7 @@ export default {
   },
   data(){
     return {
-      seller:{},
-      ratings:{},
-      goods:{}
+      seller:{}
     }
   },
   mounted() {
