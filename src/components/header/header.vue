@@ -30,41 +30,43 @@
                 <img :src="seller.avatar" width="100%" height="100%">
             </div>
         </div>
-        <div class="detail" v-show="detailShow"> 
-            <div class="detailwrap clearfix">
-                <div class="main">
-                    <h1 class="main-name">{{seller.name}}</h1>
-                    <div class="starWarp">
-                        <star :size='48' :score='seller.score'></star>
+        <transition name="fade">
+            <div class="detail" v-show="detailShow"> 
+                <div class="detailwrap clearfix">
+                    <div class="main">
+                        <h1 class="main-name">{{seller.name}}</h1>
+                        <div class="starWarp">
+                            <star :size='48' :score='seller.score'></star>
+                        </div>
+                        <div class="title">
+                            <div class="line"></div>
+                            <div class="detail-title">优惠信息</div>
+                            <div class="line"></div>
+                        </div>
+                        <ul v-if="seller.supports" class="support">
+                            <li 
+                                v-for="(item,index) in seller.supports" 
+                                class="support-item"
+                                :key=index
+                            >
+                                <!-- <activity :size='2' :index='index'></activity> -->
+                                <span class="icon" :class="classGroup[index]"></span>
+                                <span class=text>{{seller.supports[index].description}}</span>
+                            </li>
+                        </ul>
+                        <div class="title">
+                            <div class="line"></div>
+                            <div class="detail-title">商家公告</div>
+                            <div class="line"></div>
+                        </div>
+                        <div class="notice-detail"><span>{{seller.bulletin}}</span></div>
                     </div>
-                    <div class="title">
-                        <div class="line"></div>
-                        <div class="detail-title">优惠信息</div>
-                        <div class="line"></div>
-                    </div>
-                    <ul v-if="seller.supports" class="support">
-                        <li 
-                            v-for="(item,index) in seller.supports" 
-                            class="support-item"
-                            :key=index
-                        >
-                            <!-- <activity :size='2' :index='index'></activity> -->
-                            <span class="icon" :class="classGroup[index]"></span>
-                            <span class=text>{{seller.supports[index].description}}</span>
-                        </li>
-                    </ul>
-                    <div class="title">
-                        <div class="line"></div>
-                        <div class="detail-title">商家公告</div>
-                        <div class="line"></div>
-                    </div>
-                    <div class="notice-detail"><span>{{seller.bulletin}}</span></div>
+                </div>
+                <div class="detailfooter" v-on:click='detailIsClose'>
+                    <i class="icon-close"></i>
                 </div>
             </div>
-            <div class="detailfooter" v-on:click='detailIsClose'>
-                <i class="icon-close"></i>
-            </div>
-        </div>
+        </transition>
     </div>
 </template>
 
@@ -209,8 +211,15 @@ import activity from '../activity/activity.vue'
             height 100%;
             z-index 100
             overflow auto
-            transition all 0.5s;
             background-color: rgba(7,17,27,0.8)
+            &.fade-enter-active,&.fade-leave-active
+                transition all .5s linear;
+            &.fade-enter-to
+                opacity 1;
+                background-color: rgba(7,17,27,0.8)
+            &.fade-enter,&.fade-leave-to
+                opacity 0;
+                background-color: rgba(7,17,27,0)
             .detailwrap
                 min-height 100%;
                 width 100%
